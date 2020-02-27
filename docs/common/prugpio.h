@@ -1,5 +1,10 @@
 // This file defines the GPIO port addresses and PRU address
 
+// added for AI Koji Endo
+#define CHIP true
+#define CHIP_IS_am57xx true
+// added for AI Koji Endo
+//
 #if defined(CHIP) && defined(CHIP_IS_am57xx)
 #warning "Found AI"
 // These are addresses for the am5729

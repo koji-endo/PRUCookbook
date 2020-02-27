@@ -11,7 +11,7 @@
 
 #define MAXCH 4
 
-#define PRU_ADDR		0x4A300000		// Start of PRU memory Page 184 am335x TRM
+#define PRU_ADDR		0x4B200000		// Start of PRU memory Page 184 am335x TRM
 #define PRU_LEN			0x80000			// Length of PRU memory
 #define PRU0_DRAM		0x00000			// Offset to DRAM
 #define PRU1_DRAM		0x02000
@@ -26,15 +26,20 @@ unsigned int	*prusharedMem_32int_ptr;	// Points to the start of the shared memor
 * 
 * Starts a pwm pulse on for countOn and off for countOff to a single channel (ch)
 *******************************************************************************/
-int start_pwm_count(int ch, int countOn, int countOff) {
-	unsigned int *pruDRAM_32int_ptr = pru0DRAM_32int_ptr;
-	
-	printf("countOn: %d, countOff: %d, count: %d\n", 
-		countOn, countOff, countOn+countOff);
-	// write to PRU shared memory
-	pruDRAM_32int_ptr[2*(ch)+0] = countOn;	// On time
-	pruDRAM_32int_ptr[2*(ch)+1] = countOff;	// Off time
-	return 0;
+/* int start_pwm_count(int ch, int countOn, int countOff) { */
+/* 	unsigned int *pruDRAM_32int_ptr = pru0DRAM_32int_ptr; */
+/* 	 */
+/* 	printf("countOn: %d, countOff: %d, count: %d\n",  */
+/* 		countOn, countOff, countOn+countOff); */
+/* 	// write to PRU shared memory */
+/* 	pruDRAM_32int_ptr[2*(ch)+0] = countOn;	// On time */
+/* 	pruDRAM_32int_ptr[2*(ch)+1] = countOff;	// Off time */
+/* 	return 0; */
+/* } */
+int write_one(int x){
+	unsigned int *prushare=prusharedMem_32int_ptr;
+	printf("%X\n",x);
+	printf("prushare: %X\n",prushare[0]);
 }
 
 int main(int argc, char *argv[])
@@ -61,10 +66,12 @@ int main(int argc, char *argv[])
 	prusharedMem_32int_ptr = pru + PRU_SHAREDMEM/4;	// Points to start of shared memory
 
 	int i;
-	for(i=0; i<MAXCH; i++) {
-		start_pwm_count(i, i+1, 20-(i+1));
-	}
-	
+  unsigned int *prupru=pru0DRAM_32int_ptr;
+  prupru[0]=0;
+	/* for(i=0; i<MAXCH; i++) { */
+	/* 	start_pwm_count(i, i+1, 20-(i+1)); */
+	/* } */
+	write_one(atoi(argv[1]));
 	if(munmap(pru, PRU_LEN)) {
 		printf("munmap failed\n");
 	} else {
