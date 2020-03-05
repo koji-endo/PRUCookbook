@@ -50,7 +50,7 @@ int main(void)
 	PRU0_CTRL.CTPPR0_bit.C28_BLK_POINTER = 0x0100;
 
 	shared_0 =  0xfeef;
-	shared_1 = 0xfeedbeef;
+	shared_1 = 0xfeeebeee;
 	shared_2 = shared_2 + 0xfeed;
 	shared_3 = 0xdeed;
 	shared_4 = 0xbeed;
