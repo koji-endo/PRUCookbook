@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-export PRUN=0
+export PRUN=1_0
 export TARGET=shared
 echo PRUN=$PRUN
 echo TARGET=$TARGET
