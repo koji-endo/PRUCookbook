@@ -47,8 +47,14 @@ int write_one(int x) {
   printf("prushare3: %X\n", prushare[3]);
   if(x){
   prushare[0] = 0xbeefbeef;
+  prushare[1] = 0xbeefbeef;
+  prushare[2] = 0xbeefbeef;
+  prushare[3] = 0xbeefbeef;
   }else{
   prushare[0] = 0xfeedfeed;
+  prushare[1] = 0xfeedfeed;
+  prushare[2] = 0xfeedfeed;
+  prushare[3] = 0xfeedfeed;
   }
   printf("prushare0: %X\n", prushare[0]);
   printf("prushare1: %X\n", prushare[1]);
