@@ -43,10 +43,10 @@ int write_one(int x) {
   unsigned int *prushare = prusharedMem_32int_ptr2;
   printf("%X\n", x);
   printf("prushare0: %X\n", prushare[0]);
-  if(-1<x && x<1024){
-    prushare[0] = x;
+  if(-1<x && x<4096){
+    prushare[0] = ~x;
   }else{
-    printf("value is not within 0 to 1023\n");
+    printf("value is not within 0 to 4096\n");
   }
   printf("prushare0: %X\n", prushare[0]);
   printf("prushare1: %X\n", prushare[1]);
