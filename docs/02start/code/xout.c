@@ -19,8 +19,8 @@ typedef struct {
 bufferData dmemBuf;
 
 /* PRU-to-ARM interrupt */
-#define PRU1_PRU0_INTERRUPT (18)
-#define PRU0_ARM_INTERRUPT (19+16)
+#define PRU1_PRU0_INTERRUPT (18) //0x12;
+#define PRU0_ARM_INTERRUPT (19+16) //0x23;
 
 void main(void)
 {
@@ -33,14 +33,18 @@ void main(void)
 	dmemBuf.reg6 = 0xAAAAAAAA;
 	dmemBuf.reg7 = 0x12345678;
 	dmemBuf.reg8 = 0xBBBBBBBB;
+	/* dmemBuf.reg9 = PRU1_PRU0_INTERRUPT; */
+	/* dmemBuf.reg10 = PRU0_ARM_INTERRUPT; */
 	dmemBuf.reg9 = 0x87654321;
 	dmemBuf.reg10 = 0xCCCCCCCC;
 
 	/* Poll until R31.30 (PRU0 interrupt) is set
 	 * This signals PRU1 is initialized */
-	/* while ((__R31 & (1<<30)) == 0) { */
-	/* } */
+	while ((__R31 & (1<<30)) == 0) {
+	}
 
+	/* dmemBuf.reg9 = 0xbeefbeef; */
+	/* dmemBuf.reg10 = __R31; */
 	/* XFR registers R5-R10 from PRU0 to PRU1 */
 	/* 14 is the device_id that signifies a PRU to PRU transfer */
 	__xout(14, 5, 0, dmemBuf);

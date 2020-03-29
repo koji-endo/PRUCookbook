@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
     printf("this program requires exactly 1 argument which is 0-1023\n");
     exit(EXIT_FAILURE);
   }
+  int argint=atoi(argv[1]);
   int fd;
   printf("ARM pulse generator\n");
 
@@ -62,6 +63,9 @@ int main(int argc, char *argv[]) {
   }
   size_t length=0x2000;
   off_t offset=0x4B222000;
+  if(argint>0){
+    offset+=length;
+  }
   /* off_t offset=0x20AA2400; */
   /* off_t offset=0x4B222400; */
   int printNum=16;
@@ -76,7 +80,7 @@ int main(int argc, char *argv[]) {
 
   ctrl_reg=pru;
   for(int cri=0;cri<printNum;cri++){
-  printf("prushare%02d: %8X\n",cri+0x100, ctrl_reg[cri+0x100]);
+  printf("prushare%02d: %8X\n",cri, ctrl_reg[cri+0x100]);
   }
   /* prusharedMem_32int_ptr = */
   /*     pru + PRU_SHAREDMEM / 4; // Points to start of shared memory */

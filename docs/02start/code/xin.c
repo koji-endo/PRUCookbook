@@ -29,7 +29,11 @@ void main(void)
 	/* XFR registers R5-R10 from PRU0 to PRU1 */
 	/* 14 is the device_id that signifies a PRU to PRU transfer */
 	__xin(14, 5, 0, dmemBuf);
-
+  /* dmemBuf.reg5=__R31; */
+  /* dmemBuf.reg6=0xfeedbeef; */
+  /* dmemBuf.reg7=0xfeedbeef; */
+  /* dmemBuf.reg8=0xfeedbeef; */
+  /* dmemBuf.reg9=0xfeedbeef; */
 	/* Halt the PRU core */
 	__halt();
 }
