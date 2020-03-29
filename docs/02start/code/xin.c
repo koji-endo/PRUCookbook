@@ -5,7 +5,7 @@
 #define PRU1
 volatile register uint32_t __R30;
 volatile register uint32_t __R31;
-
+volatile unsigned int *shared=(unsigned int *) (0x1000C);
 typedef struct {
 	uint32_t reg5;
 	uint32_t reg6;
@@ -28,12 +28,14 @@ void main(void)
 
 	/* XFR registers R5-R10 from PRU0 to PRU1 */
 	/* 14 is the device_id that signifies a PRU to PRU transfer */
-	__xin(14, 5, 0, dmemBuf);
-  /* dmemBuf.reg5=__R31; */
-  /* dmemBuf.reg6=0xfeedbeef; */
-  /* dmemBuf.reg7=0xfeedbeef; */
+	//__xin(14, 5, 0, dmemBuf);
+  shared[0]=0xfeedbeef;
+  shared[1]=0xfeedbeef;
+  shared[2]=__R31;
+  shared[3]=PRU1_PRU0_INTERRUPT+16;
   /* dmemBuf.reg8=0xfeedbeef; */
   /* dmemBuf.reg9=0xfeedbeef; */
+  /* dmemBuf.reg10=0xfeedbeef; */
 	/* Halt the PRU core */
 	__halt();
 }

@@ -43,8 +43,8 @@ void main(void)
 	while ((__R31 & (1<<30)) == 0) {
 	}
 
-	/* dmemBuf.reg9 = 0xbeefbeef; */
-	/* dmemBuf.reg10 = __R31; */
+	dmemBuf.reg9 = 0xbeefbeef;
+	dmemBuf.reg10 = __R31;
 	/* XFR registers R5-R10 from PRU0 to PRU1 */
 	/* 14 is the device_id that signifies a PRU to PRU transfer */
 	__xout(14, 5, 0, dmemBuf);
