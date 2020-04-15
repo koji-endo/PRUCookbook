@@ -23,11 +23,11 @@ void main(void) {
 	while(1) {
 		gpio1[GPIO_SETDATAOUT]   = USR3;			// The the USR3 LED on
     if(on[0]!=0){
-		__delay_cycles(100000000);    // Wait 1/2 second
+		__delay_cycles(300000000);    // Wait 1/2 second
     }
 		gpio1[GPIO_CLEARDATAOUT] = USR3;
 
-		__delay_cycles(100000000); 
+		__delay_cycles(300000000); 
 
 	}
 	__halt();
