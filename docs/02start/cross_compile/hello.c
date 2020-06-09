@@ -3,6 +3,15 @@
 #include <pru_cfg.h>
 #include <stdint.h>
 
+// trick to escape lint by editor
+#ifndef __delay_cycles
+#define __delay_cycles(x) int(x)
+#define __R30 10
+#define __R31 10
+#define __halt() exit()
+#define CT_CFG null
+#endif
+typedef unsigned int uint32_t;
 volatile register unsigned int __R30;
 volatile register unsigned int __R31;
 
@@ -10,7 +19,7 @@ volatile register unsigned int __R31;
 // Skip the first 0x200 byte of DRAM since the Makefile allocates
 // 0x100 for the STACK and 0x100 for the HEAP.
 volatile unsigned int *pru0_dram = (unsigned int *)(PRU0_DRAM + 0x200);
-void main(void) {
+int main(void) {
   int i;
 
   uint32_t on[] = {1, 2, 3, 4}; // Number of cycles to stay on

@@ -1,0 +1,3 @@
+%c -I/opt/clpru/include
+%c -I../../common
+%c /home/endo/Documents/workdir/PRUCookbook/pru-software-support-package/include/am335x
