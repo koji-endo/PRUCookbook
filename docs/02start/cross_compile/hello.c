@@ -4,13 +4,6 @@
 #include <stdint.h>
 
 // trick to escape lint by editor
-#ifndef __delay_cycles
-#define __delay_cycles(x) int(x)
-#define __R30 10
-#define __R31 10
-#define __halt() exit()
-#define CT_CFG null
-#endif
 typedef unsigned int uint32_t;
 volatile register unsigned int __R30;
 volatile register unsigned int __R31;
