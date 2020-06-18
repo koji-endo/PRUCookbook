@@ -18,3 +18,12 @@ ifdef target
 else
 	echo "no target is set"
 endif
+
+
+211:
+ifdef target
+	echo "scp $(target).out 211:/tmp/pru/"
+	scp $(target).out 211:/tmp/pru/
+else
+	echo "no target is set"
+endif
