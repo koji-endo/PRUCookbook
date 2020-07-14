@@ -11,6 +11,9 @@
 PRU_CGT:=/usr/share/ti/cgt-pru
 PRU_SUPPORT:=/usr/lib/ti/pru-software-support-package
 
+CC := /opt/clpru/bin/clpru
+LNK := /opt/clpru/bin/lnkpru
+
 LINKER_COMMAND_FILE=AM335x_PRU.cmd
 LIBS=--library=$(PRU_SUPPORT)/lib/rpmsg_lib.lib
 INCLUDE=--include_path=$(PRU_SUPPORT)/include --include_path=$(PRU_SUPPORT)/include/am335x
@@ -42,23 +45,27 @@ start:
 	@echo "-    Starting PRU $(PRUN)"
 	@echo start | sudo tee $(PRU_DIR)/state
 
+
+cross: $(GEN_DIR)/$(TARGET).out
+	@echo 'building a file'
+
 install: $(GEN_DIR)/$(TARGET).out
 	@echo '-	copying firmware file $(GEN_DIR)/$(TARGET).out to /lib/firmware/am335x-pru$(PRUN)-fw'
 	@sudo cp $(GEN_DIR)/$(TARGET).out /lib/firmware/am335x-pru$(PRUN)-fw
 
 $(GEN_DIR)/$(TARGET).out: $(GEN_DIR)/$(TARGET).obj $(GEN_DIR)/$(TARGETasm).obj
 	@echo 'LD	$^' 
-	@lnkpru -i$(PRU_CGT)/lib -i$(PRU_CGT)/include $(LFLAGS) -o $@ $^ $(LINKER_COMMAND_FILE) --library=libc.a $(LIBS) $^
+	$(LNK) -i$(PRU_CGT)/lib -i$(PRU_CGT)/include $(LFLAGS) -o $@ $^ $(LINKER_COMMAND_FILE) --library=libc.a $(LIBS) $^
 
 $(GEN_DIR)/$(TARGET).obj: $(TARGET).c
 	@mkdir -p $(GEN_DIR)
 	@echo 'CC	$<'
-	@clpru --include_path=$(PRU_CGT)/include $(INCLUDE) $(CFLAGS) -D=PRUN=$(PRUN) -fe $@ $<
+	$(CC) --include_path=$(PRU_CGT)/include $(INCLUDE) $(CFLAGS) -D=PRUN=$(PRUN) -fe $@ $<
 
 $(GEN_DIR)/$(TARGETasm).obj: $(TARGETasm).asm
 	@mkdir -p $(GEN_DIR)
 	@echo 'CC	$<'
-	@clpru --include_path=$(PRU_CGT)/include $(INCLUDE) $(CFLAGS) -D=PRUN=$(PRUN) -fe $@ $<
+	$(CC) --include_path=$(PRU_CGT)/include $(INCLUDE) $(CFLAGS) -D=PRUN=$(PRUN) -fe $@ $<
 
 clean:
 	@echo 'CLEAN	.    PRU $(PRUN)'
