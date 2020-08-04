@@ -13,26 +13,9 @@ all:
 
 scp:
 ifdef target
-	echo "scp $(target).out beagle65:/tmp/pru/"
-	scp $(target).out beagle65:/tmp/pru/
+	echo "scp $(target).out w16:/tmp/pru/"
+	scp $(target).out w16:/tmp/pru/
 else
 	echo "no target is set"
 endif
 
-
-211:
-ifdef target
-	echo "scp $(target).out 211:/tmp/pru/"
-	scp $(target).out 211:/tmp/pru/
-else
-	echo "no target is set"
-endif
-
-
-enh212:
-ifdef target
-	echo "scp $(target).out enh212:/tmp/pru/"
-	scp $(target).out enh212:/tmp/pru/
-else
-	echo "no target is set"
-endif
