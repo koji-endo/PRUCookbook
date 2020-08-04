@@ -7,9 +7,9 @@
 my_delay_cycles:
 delay:
 	sub		r14,   r14, 1		; The first argument is passed in r14
-	qbne	delay, r14, 0
+;	qbne	delay, r14, 0
 	
-	ldi		r14, TEST		; TEST is defined in delay-test2.c
+;	ldi		r14, TEST		; TEST is defined in delay-test2.c
 							; r14 is the return register
 
 	jmp		r3.w2			; r3 contains the return address
