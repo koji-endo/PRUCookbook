@@ -8,7 +8,7 @@
 
 volatile register uint32_t __R30;
 volatile register uint32_t __R31;
-
+volatile unsigned int *shared = (unsigned int *)(0x10000);
 /* Host-0 Interrupt sets bit 30 in register R31 */
 #define HOST_INT ((uint32_t)1 << 30)
 
@@ -35,6 +35,11 @@ volatile register uint32_t __R31;
 #define SCAN_SPEED 1
 #define SCAN_SHAPE 2
 #define SCAN_INVERT 3
+#define SCAN_WIDTH_GO 4
+#define SCAN_WIDTH_COME 5
+#define SCAN_HEIGHT_GO 6
+#define SCAN_HEIGHT_COME 7
+#define SCAN_REPEAT_NUM 8
 #define KILO 1000
 /*
  * Used to make sure the Linux drivers are ready for RPMsg communication
@@ -71,73 +76,29 @@ void OnePulseBase(int count, int dir, int offset) {
 }
 
 void OnePulse(int count, int dir) { OnePulseBase(count, dir, 0); }
+
 void OneLineStep(int count, int dir) { OnePulseBase(count, dir, 4); }
-void createE() {
-  int r_i = 1;
+
+void xyscan() {
+  int r_i = 0;
   int j = 0;
   int i = 0;
-  const int N = u32p[SCAN_SIZE] / 5;
-  int repeat_i = 0;
-  for (repeat_i = 0; repeat_i < 2; repeat_i++) {
-    // while (1) {
-    for (j = 0; j < 2; j++) {
-      for (i = 0; i < N; i++) {
-        OnePulse(5 * N, 1);
-        OneLineStep(1, r_i);
-        OnePulse(5 * N, 0);
-        OneLineStep(1, r_i);
-      }
-      for (i = 0; i < N; i++) {
-        OnePulse(N, 1);
-        OneLineStep(1, r_i);
-        OnePulse(N, 0);
-        OneLineStep(1, r_i);
+  while (1) {
+    for (i = 0; i < u32p[SCAN_HEIGHT_GO]; i++) {
+      OnePulse(u32p[SCAN_WIDTH_GO], 1);
+      OnePulse(u32p[SCAN_WIDTH_COME], 0);
+      OneLineStep(1, 1);
+    }
+    OneLineStep(u32p[SCAN_HEIGHT_COME], 0);
+    if (u32p[SCAN_REPEAT_NUM] > 0) {
+      r_i++;
+      if (r_i == u32p[SCAN_REPEAT_NUM]) {
+        break;
       }
     }
-    for (i = 0; i < N; i++) {
-      OnePulse(5 * N, 1);
-      OneLineStep(1, r_i);
-      OnePulse(5 * N, 0);
-      OneLineStep(1, r_i);
-    }
-    r_i = (r_i + 1) % 2;
-    OneLineStep(1, r_i);
   }
 }
 
-void createF() {
-  int r_i = 1;
-  int i = 0;
-  const int N = u32p[SCAN_SIZE] / 5;
-  while (1) {
-    for (i = 0; i < N; i++) {
-      OnePulse(5 * N, 1);
-      OneLineStep(1, r_i);
-      OnePulse(5 * N, 0);
-      OneLineStep(1, r_i);
-    }
-    for (i = 0; i < N; i++) {
-      OnePulse(N, 1);
-      OneLineStep(1, r_i);
-      OnePulse(N, 0);
-      OneLineStep(1, r_i);
-    }
-    for (i = 0; i < N; i++) {
-      OnePulse(3 * N, 1);
-      OneLineStep(1, r_i);
-      OnePulse(3 * N, 0);
-      OneLineStep(1, r_i);
-    }
-    for (i = 0; i < 2 * N; i++) {
-      OnePulse(5 * N, 1);
-      OneLineStep(1, r_i);
-      OnePulse(5 * N, 0);
-      OneLineStep(1, r_i);
-    }
-    r_i = (r_i + 1) % 2;
-    OneLineStep(1, r_i);
-  }
-}
 /*
  * main.c
  */
@@ -182,12 +143,20 @@ void main(void) {
         pru_rpmsg_send(&transport, dst, src, payload, len);
         u16p = (int16_t *)payload;
         u32p = (int32_t *)(payload + 24);
-        __R30 = 255;
-        if (u32p[SCAN_SHAPE] == 0) {
-          createE();
-        } else {
-          createF();
-        }
+        __R30 = 254;
+        shared[0] = 0xbeefbeef;
+        shared[1] = __R30;
+        shared[2] = 0xbeefbeef;
+        shared[3] = u32p[0];
+        shared[4] = u32p[1];
+        shared[5] = u32p[2];
+        shared[6] = u32p[3];
+        shared[7] = u32p[4];
+        shared[8] = u32p[5];
+        shared[9] = u32p[6];
+        shared[10] = u32p[7];
+        shared[11] = u32p[8];
+        xyscan();
       }
     }
   }
